@@ -16,4 +16,4 @@ LIRI can take in one of the following commands:
   3. `node liri.js do-what-it-says`
      * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
 
-          LIRI, your own personal assistant!
+LIRI, your own personal assistant!

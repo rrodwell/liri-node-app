@@ -29,7 +29,7 @@ function append(){
 //my-tweets
 function tweeter(){
   //queryUrl
-  var params = {screen_name: 'rrodwell85'};
+  var params = {screen_name: 'rrodwell85', count: 20};
   client.get('statuses/user_timeline', params, function(error, tweets, response) {
     if (!error) {
 
@@ -37,6 +37,9 @@ function tweeter(){
     }
   });
 }
+
+
+
 
 //spotify-this-song
 function spotifyThis(){

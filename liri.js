@@ -16,7 +16,6 @@ access_token_secret: twitterStuff.twitterKeys.access_token_secret
 //command for liri from command line
 var liriCommand = process.argv[2];
 var liriName= process.argv[3];
-console.log(liriName);
 
 //fs read file function
 function read(){
@@ -53,7 +52,6 @@ function userInquire(userObject, spotifyData){
       tweeter(handle.name);
     } else if (liriCommand === "spotify-this-song"){
       //ask user what is the name  artist
-      console.log("this is where i fucked up");
       spotifyArtist(handle.name);
     }
   });
@@ -115,7 +113,7 @@ function whatMovie(movieName){
   } else {
     name = "mr+nobody";
   }
-  
+
   var movieUrl = "http://www.omdbapi.com/?t=" + name + "&y=&plot=short&r=json";
 
   request(movieUrl, function(err, response, body){

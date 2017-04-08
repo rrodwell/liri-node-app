@@ -3,8 +3,6 @@ var Twitter = require('twitter');
 var twitterStuff = require("./keys.js");
 var inquirer = require("inquirer");
 var spotify = require('spotify');
-var request = require("request");
-
 
 var client = new Twitter({
 consumer_key: twitterStuff.twitterKeys.consumer_key,
@@ -13,10 +11,10 @@ access_token_key: twitterStuff.twitterKeys.access_token_key,
 access_token_secret: twitterStuff.twitterKeys.access_token_secret
 });
 
+
 //command for liri from command line
 var liriCommand = process.argv[2];
 var liriName= process.argv[3];
-console.log(liriName);
 
 //fs read file function
 function read(){
@@ -85,54 +83,36 @@ function spotifyThis(command){
           return;
       }
       console.log(data);
-      if(true){
-        if (command === "The Sign"){
-            console.log("Track: " + data.tracks.items[14].name);
-            console.log("Artist: " + data.tracks.items[14].artists[0].name);
-            console.log("Album: " + data.tracks.items[14].album.name);
-            console.log("Song Preview: " + data.tracks.items[14].preview_url);
-          } else if (true){
-            console.log("Track: " + data.tracks.items[0].name);
-            console.log("Artist: " + data.tracks.items[0].artists[0].name);
-            console.log("Album: " + data.tracks.items[0].album.name);
-            console.log("Song Preview: " + data.tracks.items[0].preview_url);
-          }
+      var spotifyData = data;
+      var numTracks = data.tracks.items.length;
+      //if data.tracks.items.length >1
+      if (numTracks > 1){
+        userInquire(spotifyInput);
+        return spotifyData;
       } else {
-        if (data.error.status ===  400){
-          spotifyThis("The Sign",true);
-        }
+        console.log("Album: " + data.tracks.items[0].album.name);
+        console.log("Track: " + data.tracks.items[0].name);
+        console.log("Artist: " + data.tracks.items[0].artists[0].name);
+        console.log("Song Preview: " + data.tracks.items[0].preview_url);
       }
+        //user input find artist name
+        //data.tracks.items.artists.length
+          //data.tracks.items.album.name
+          //data.tranks.items.artists.name
   });
 }
 
+function spotifyArtist(handle, spotifyData){
+  var numArtists = spotifyData.tracks.items.artists.length;
+  var albumName = spotifyData.tracks.items.album.name;
+  var artistName = spotifyData.tracks.items.artists.name;
+  console.log(handle);
+  console.log(spotifyData);
+}
 
 
 //movie-this
-function whatMovie(movieName){
-  var name;
-  if(movieName){
-    name = movieName;
-  } else {
-    name = "mr+nobody";
-  }
-  
-  var movieUrl = "http://www.omdbapi.com/?t=" + name + "&y=&plot=short&r=json";
-
-  request(movieUrl, function(err, response, body){
-    var objectString = JSON.parse(body);
-    if(err){
-      console.log(err);
-    } else {
-      console.log("Movie Title: " + objectString.Title);
-      console.log("Year: " + objectString.Year);
-      console.log("Rating: " + objectString.Rated);
-      console.log("Country: " + objectString.Country);
-      console.log("Language: " + objectString.Language);
-      console.log("Plot: " + objectString.Plot);
-      console.log("Actors: " + objectString.Actors);
-    }
-
-  });
+function whatMovie(){
 
 }
 
@@ -152,7 +132,7 @@ switch (liriCommand){
   break;
 
   case "movie-this":
-  whatMovie(liriName);
+  whatMovie();
   break;
 
   case "do-what-it-says":

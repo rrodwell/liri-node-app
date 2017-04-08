@@ -77,80 +77,51 @@ function tweeter(userName){
 //spotify-this-song
 function spotifyThis(songName){
   spotify.search({ type: 'track', query: songName }, function(err, data) {
-      if ( err ) {
+      if (err) {
           console.log('Error occurred: ' + err);
           return;
       }
-      // switch(a){
-      //   case "test":
-      //   console.log("There are multiple tracks with this name. Help me narrow your search.");
-      //   userInquire(spotifyInput, liriCommand, data);
-      //   break;
-      //
-      //   case "err":
-      //   console.log(crap);
-      //   break;
-      //
-      //   default:
-      //
-      // }
-      console.log("There are multiple tracks with this name. Help me narrow your search.");
-      userInquire(spotifyInput, liriCommand, data);
-      //console.log(data);
-      // if(true){
-      //   if (command === "The Sign"){
-      //       console.log("Track: " + data.tracks.items[14].name);
-      //       console.log("Artist: " + data.tracks.items[14].artists[0].name);
-      //       console.log("Album: " + data.tracks.items[14].album.name);
-      //       console.log("Song Preview: " + data.tracks.items[14].preview_url);
-      //     } else if (true){
-      //       console.log("Track: " + data.tracks.items[0].name);
-      //       console.log("Artist: " + data.tracks.items[0].artists[0].name);
-      //       console.log("Album: " + data.tracks.items[0].album.name);
-      //       console.log("Song Preview: " + data.tracks.items[0].preview_url);
-      //     }
-      // } else {
-      //   if (data.error.status ===  400){
-      //     spotifyThis("The Sign",true);
-      //   }
-      // }
-  });
+      if(songName === "The Sign"){
+        console.log("Track: " + data.tracks.items[14].name);
+        console.log("Artist: " + data.tracks.items[14].artists[0].name);
+        console.log("Album: " + data.tracks.items[14].album.name);
+        console.log("Song Preview: " + data.tracks.items[14].preview_url);
+      } else {
+        //Determining how many different artist matches there are for the searched track
+        var numTracks = data.tracks.items.length;
+        if(numTracks !== 0){
+          console.log("There are multiple tracks with this name. Help me narrow your search.");
+          userInquire(spotifyInput, liriCommand, data);
+        } else {
+          spotifyThis("The Sign");
+        }
+      }
+    });
 }
-//
-// var spotifyData = data;
-// var numTracks = data.tracks.items.length;
-// //if data.tracks.items.length >1
-// if (numTracks > 1){
-//   userInquire(spotifyInput);
-//   return spotifyData;
-// } else {
-//   console.log("Album: " + data.tracks.items[0].album.name);
-//   console.log("Track: " + data.tracks.items[0].name);
-//   console.log("Artist: " + data.tracks.items[0].artists[0].name);
-//   console.log("Song Preview: " + data.tracks.items[0].preview_url);
-// }
-//   //user input find artist name
-//   //data.tracks.items[i].artists[i].length
-//     //data.tracks.items.album.name
-//     //data.tranks.items.artists.name
 
+
+//function to help determine which artist the user is actually searching for
 function spotifyArtist(handle, spotifyData){
-  var artistArr = [];
   var numArtists = spotifyData.tracks.items;
   for (var i = 0; i < numArtists.length; i++) {
     for (var j = 0; j < numArtists[i].artists.length; j++) {
       if(numArtists[i].artists[j].name == handle){
-        console.log("handle: "+handle);
         console.log("Album: " + numArtists[i].album.name);
         console.log("Track: " + numArtists[i].name);
         console.log("Artist: " + numArtists[i].artists[j].name);
         console.log("Song Preview: " + numArtists[i].preview_url);
-        break;
+        return;
+      } else {
+        console.log("You may have misspelled the artist, let me choose for you.");
+        console.log("Album: " + numArtists[0].album.name);
+        console.log("Track: " + numArtists[0].name);
+        console.log("Artist: " + numArtists[0].artists[0].name);
+        console.log("Song Preview: " + numArtists[0].preview_url);
+        return;
       }
     }
   }
 }
-
 
 
 //movie-this

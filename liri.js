@@ -38,7 +38,6 @@ var twitterInput = new UserPrompt("input", "name", "What is your Twitter handle?
 
 var spotifyInput = new UserPrompt("input", "name", "What is the name of the Artist?");
 
-var artistsName;
 //inquirer function
 function userInquire(userObject, command, dataHolder){
   inquirer.prompt([
@@ -75,7 +74,7 @@ function tweeter(userName){
 
 
 //spotify-this-song
-function spotifyThis(songName){
+function spotifyThis(songName, command){
   spotify.search({ type: 'track', query: songName }, function(err, data) {
       if (err) {
           console.log('Error occurred: ' + err);
@@ -91,7 +90,7 @@ function spotifyThis(songName){
         var numTracks = data.tracks.items.length;
         if(numTracks !== 0){
           console.log("There are multiple tracks with this name. Help me narrow your search.");
-          userInquire(spotifyInput, liriCommand, data);
+          userInquire(spotifyInput, command, data);
         } else {
           spotifyThis("The Sign");
         }
@@ -162,10 +161,11 @@ function doThis(data){
   var newCommand = splitData[0];
   var whatToDo = splitAgain[1];
   console.log(newCommand);
+  console.log("what "+ whatToDo);
 
   switch(newCommand){
     case "spotify-this-song":
-    spotifyThis(whatToDo);
+    spotifyThis(whatToDo, newCommand);
     break;
 
     case "my-tweets":
@@ -185,7 +185,7 @@ switch (liriCommand){
   break;
 
   case "spotify-this-song":
-  spotifyThis(liriName);
+  spotifyThis(liriName, liriCommand);
   break;
 
   case "movie-this":

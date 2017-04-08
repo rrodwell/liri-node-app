@@ -21,15 +21,12 @@ var liriName= process.argv[3];
 function read(){
   fs.readFile("random.txt", "utf8", function(err, data) {
     if(err){ console.log(err); }
+    //run doThis
+    doThis(data);
   });
 }
 
-//fs append to file
-function append(){
-  fs.appendFile("random.txt", numAmount, function(err) {
-    if(err){ console.log(err); }
-  });
-}
+
 //object constructor for user prompt
 function UserPrompt(type, name, message){
   this.type = type;
@@ -43,14 +40,14 @@ var spotifyInput = new UserPrompt("input", "name", "What is the name of the Arti
 
 var artistsName;
 //inquirer function
-function userInquire(userObject, spotifyData){
+function userInquire(userObject, command){
   inquirer.prompt([
     userObject
   ]).then(function(handle){
-    if (liriCommand === "my-tweets"){
+    if (command === "my-tweets"){
     //ask user what their Twitter handle is
       tweeter(handle.name);
-    } else if (liriCommand === "spotify-this-song"){
+    } else if (command === "spotify-this-song"){
       //ask user what is the name  artist
       spotifyArtist(handle.name);
     }
@@ -82,7 +79,7 @@ function spotifyThis(command){
           console.log('Error occurred: ' + err);
           return;
       }
-      console.log(data);
+      //console.log(data);
       if(true){
         if (command === "The Sign"){
             console.log("Track: " + data.tracks.items[14].name);
@@ -135,14 +132,35 @@ function whatMovie(movieName){
 }
 
 //do-what-it-says
-function doThis(){
+function doThis(data){
+  //split the command and the task information
+  var splitData = data.split(",");
+  //removing extra "" and /n
+  var splitAgain = splitData[1].split('"');
+  //grabbing just the task and command
+  var newCommand = splitData[0];
+  var whatToDo = splitAgain[1];
+  console.log(newCommand);
 
+  switch(newCommand){
+    case "spotify-this-song":
+    spotifyThis(whatToDo);
+    break;
+
+    case "my-tweets":
+    userInquire(twitterInput, newCommand);
+    break;
+
+    case "movie-this":
+    whatMovie(whatToDo);
+    break;
+  }
 }
 
 
 switch (liriCommand){
   case "my-tweets":
-  userInquire(twitterInput);
+  userInquire(twitterInput, liriCommand);
   break;
 
   case "spotify-this-song":
@@ -154,6 +172,6 @@ switch (liriCommand){
   break;
 
   case "do-what-it-says":
-  doThis();
+  read();
   break;
 }

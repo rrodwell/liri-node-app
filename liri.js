@@ -40,7 +40,7 @@ var spotifyInput = new UserPrompt("input", "name", "What is the name of the Arti
 
 var artistsName;
 //inquirer function
-function userInquire(userObject, command){
+function userInquire(userObject, command, dataHolder){
   inquirer.prompt([
     userObject
   ]).then(function(handle){
@@ -49,10 +49,11 @@ function userInquire(userObject, command){
       tweeter(handle.name);
     } else if (command === "spotify-this-song"){
       //ask user what is the name  artist
-      spotifyArtist(handle.name);
+      spotifyArtist(handle.name,dataHolder);
     }
   });
 }
+
 
 //my-tweets
 function tweeter(userName){
@@ -72,32 +73,82 @@ function tweeter(userName){
   });
 }
 
+
 //spotify-this-song
-function spotifyThis(command){
-  spotify.search({ type: 'track', query: command }, function(err, data) {
+function spotifyThis(songName){
+  spotify.search({ type: 'track', query: songName }, function(err, data) {
       if ( err ) {
           console.log('Error occurred: ' + err);
           return;
       }
+      // switch(a){
+      //   case "test":
+      //   console.log("There are multiple tracks with this name. Help me narrow your search.");
+      //   userInquire(spotifyInput, liriCommand, data);
+      //   break;
+      //
+      //   case "err":
+      //   console.log(crap);
+      //   break;
+      //
+      //   default:
+      //
+      // }
+      console.log("There are multiple tracks with this name. Help me narrow your search.");
+      userInquire(spotifyInput, liriCommand, data);
       //console.log(data);
-      if(true){
-        if (command === "The Sign"){
-            console.log("Track: " + data.tracks.items[14].name);
-            console.log("Artist: " + data.tracks.items[14].artists[0].name);
-            console.log("Album: " + data.tracks.items[14].album.name);
-            console.log("Song Preview: " + data.tracks.items[14].preview_url);
-          } else if (true){
-            console.log("Track: " + data.tracks.items[0].name);
-            console.log("Artist: " + data.tracks.items[0].artists[0].name);
-            console.log("Album: " + data.tracks.items[0].album.name);
-            console.log("Song Preview: " + data.tracks.items[0].preview_url);
-          }
-      } else {
-        if (data.error.status ===  400){
-          spotifyThis("The Sign",true);
-        }
-      }
+      // if(true){
+      //   if (command === "The Sign"){
+      //       console.log("Track: " + data.tracks.items[14].name);
+      //       console.log("Artist: " + data.tracks.items[14].artists[0].name);
+      //       console.log("Album: " + data.tracks.items[14].album.name);
+      //       console.log("Song Preview: " + data.tracks.items[14].preview_url);
+      //     } else if (true){
+      //       console.log("Track: " + data.tracks.items[0].name);
+      //       console.log("Artist: " + data.tracks.items[0].artists[0].name);
+      //       console.log("Album: " + data.tracks.items[0].album.name);
+      //       console.log("Song Preview: " + data.tracks.items[0].preview_url);
+      //     }
+      // } else {
+      //   if (data.error.status ===  400){
+      //     spotifyThis("The Sign",true);
+      //   }
+      // }
   });
+}
+//
+// var spotifyData = data;
+// var numTracks = data.tracks.items.length;
+// //if data.tracks.items.length >1
+// if (numTracks > 1){
+//   userInquire(spotifyInput);
+//   return spotifyData;
+// } else {
+//   console.log("Album: " + data.tracks.items[0].album.name);
+//   console.log("Track: " + data.tracks.items[0].name);
+//   console.log("Artist: " + data.tracks.items[0].artists[0].name);
+//   console.log("Song Preview: " + data.tracks.items[0].preview_url);
+// }
+//   //user input find artist name
+//   //data.tracks.items[i].artists[i].length
+//     //data.tracks.items.album.name
+//     //data.tranks.items.artists.name
+
+function spotifyArtist(handle, spotifyData){
+  var artistArr = [];
+  var numArtists = spotifyData.tracks.items;
+  for (var i = 0; i < numArtists.length; i++) {
+    for (var j = 0; j < numArtists[i].artists.length; j++) {
+      if(numArtists[i].artists[j].name == handle){
+        console.log("handle: "+handle);
+        console.log("Album: " + numArtists[i].album.name);
+        console.log("Track: " + numArtists[i].name);
+        console.log("Artist: " + numArtists[i].artists[j].name);
+        console.log("Song Preview: " + numArtists[i].preview_url);
+        break;
+      }
+    }
+  }
 }
 
 
@@ -126,10 +177,9 @@ function whatMovie(movieName){
       console.log("Plot: " + objectString.Plot);
       console.log("Actors: " + objectString.Actors);
     }
-
   });
-
 }
+
 
 //do-what-it-says
 function doThis(data){
@@ -157,7 +207,7 @@ function doThis(data){
   }
 }
 
-
+//LIRI inital commands
 switch (liriCommand){
   case "my-tweets":
   userInquire(twitterInput, liriCommand);
